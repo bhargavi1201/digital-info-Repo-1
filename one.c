@@ -1,0 +1,12 @@
+#include<stdio.h>
+h dkjhfsdkjhfkjdshfkhds'
+  sdfg lfdknlkfjlkgfjdlkjglfdkjgkj rdkjg salr jwqjrklAJLKFNDS,MVN,MV NM,DZNV,SDMG,BSGFDMNGBMFBN DFGMNDF FKLJGKDLFJGKLJSFKLGHSFJKGKJSAKJGHDAGKAGKAHKJSAGKJASKJGKJSHGKASGSD SF GSF
+  
+   TWEWERTRWETREWTREWTRETRETERT
+   
+    TRETERTERT
+    RET
+     ER
+     TRE
+     TRE
+     TERWTW
