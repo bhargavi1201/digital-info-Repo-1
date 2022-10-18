@@ -1,0 +1,128 @@
+
+-create a new ansible-playbook 
+-get syntax check
+-run playbook (if we use default host file)
+- ansible-playbook  playbook1.yml  --syntax-check
+
+2)create a working directory
+
+a)mkdir ansible
+b)nano play.yaml
+========================================================================
+---
+-
+  become: true
+  hosts: slave1
+  name: play1
+  tasks:
+    -
+      apt: "name=apache2 state=latest"
+      name: "Install Apache Server"
+    -
+      name: "Start Apache Server"
+      service: "name=apache2 state=restarted"
+-
+  become: true
+  hosts: slave2
+  name: play2
+  tasks:
+    -
+      name: "Install httpd Server"
+      yum: "name=httpd state=latest"
+    -
+      name: "Start httpd Server"
+      service: "name=httpd state=restarted"
+
+
+=========================================================================
+Ex#1 :  playbook1.yml
+
+---
+-
+  hosts: slave1
+  name: play1
+  sudo: true
+  tasks:
+    -
+      apt: "name=nginx state=latest"
+      name: "Install nginx"
+-
+  hosts: slave2
+  name: play2
+  sudo: true
+  tasks:
+    -
+      apt: "name=apache2 state=latest"
+      name: "Install Apache"
+
+
+e)ansible-playbook play1.yml --syntax-check
+  ansible-playbook play1.yml
+
+f)open browser and check with DNS Names
+      
+=================================================================================
+Ex#2 :playbook2.yml  //Installing httpd package
+
+--- 
+- 
+  hosts: test
+  tasks: 
+    - name: "Install a httpd package "
+      yum: "name=httpd state=latest"
+    - name: "Start a httpd service"
+      service: "name=httpd state=restarted"
+
+ansible-playbook  playbook2.yml --syntax-check
+ansible-playbook  playbook2.yml 
+
+==================================================================================
+Ex#3 :playbook3.yml  //UnInstalling httpd package
+--- 
+- 
+  hosts: test
+  tasks:
+    - name: "Start a httpd service"
+      service: "name=httpd state=stopped" 
+
+    - name: "Un Install a httpd package "
+      yum: "name=httpd state=absent"
+
+
+#ansible-playbook  playbook3.yml --syntax-check
+ ansible-playbook  playbook3.yml
+==================================================================================
+Ex#4 :playbook4.yml  #uninstall nginx 
+
+--- 
+- 
+  hosts: slave1
+  tasks: 
+    - 
+      apt: 
+        name: nginx
+        state: absent
+      name: "Uninstall NginX"
+    - 
+      name: "Stop Nginx Services"
+      service: 
+        name: nginx
+        state: stopped
+==================================================================================
+
+Ex#5 playbook5.yml //install and run nginx
+
+--- 
+- 
+  hosts: slave1
+  tasks: 
+    - 
+      apt: 
+        name: nginx
+        state: present
+      name: "Install NginX"
+    - 
+      name: "Start Nginx Services"
+      service: 
+        name: nginx
+        state: started

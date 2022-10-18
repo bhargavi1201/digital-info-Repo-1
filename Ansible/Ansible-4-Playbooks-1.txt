@@ -1,0 +1,48 @@
+- 
+  hosts: webservers
+  become: true
+  tasks: 
+    - name: "Install a httpd package on Remote Machine"
+      yum: "name=httpd state=latest"
+
+    - name: "Start a httpd service"
+      service: "name=httpd state=restarted"
+
+-----------------------------------------------------------
+
+
+- 
+  hosts: webservers
+  become: true
+  tasks: 
+    - name: "stop httpd service on Remote Machine"
+      service: "name=httpd state=stopped"
+
+    - name: "Un install httpd from Remote Machine"
+      yum: "name=httpd state=absent"
+
+-------------------------------------------------------------------
+
+---
+-
+  become: true
+  hosts: slave1
+  name: play1
+  tasks:
+    -
+      apt: "name=apache2 state=latest"
+      name: "Install Apache Server"
+    -
+      name: "Start Apache Server"
+      service: "name=apache2 state=restarted"
+-
+  become: true
+  hosts: slave2
+  name: play2
+  tasks:
+    -
+      name: "Install httpd Server"
+      yum: "name=httpd state=latest"
+    -
+      name: "Start httpd Server"
+      service: "name=httpd state=restarted"

@@ -1,0 +1,120 @@
+#How to configure Slave/Remote machines
+
+1)Login to master machines
+a)cd /etc/ansible/
+b)ls
+c)nano hosts
+
+  [webservers]
+  slave1 ansible_ssh_host=<slave1-private-ip-address>
+  slave2 ansible_ssh_host=<slave2-private-ip-address>
+
+d)ansible -m ping slave1
+e)ansible -m ping slave2
+f)ansible -m ping all
+
+
+Ad-hoc commands :
+----------------------
+1)To know uptime
+ansible webservers -m shell -a "uptime"
+
+2)To transfer File from Manager Node to Worker Node:
+ansible webservers -m copy -a "src=/home/shashi/testfile dest=/tmp/testfile"
+ansible webservers -m file -a "dest=/tmp/demo123 state=directory"
+
+3)To create directory in workernode (create user1 in worker node)
+  ansible test -m file -a "dest=/home/user1/demo mode=777 owner=user1 group=user1 state=directory"
+
+4)Deleting a directory in worker node
+  ansible webservers -m file -a "dest=/tmp/demo123 state=absent"
+
+Webserver(Tomcat) Installation and uninstallation:
+5)ansible slave2 -m yum -a "name=httpd state=present"
+  ansible slave2 -m service -a "name=httpd state=started"
+
+  ansible slave2 -m service -a "name=httpd state=stopped"  
+6)ansible slave2 -m yum -a "name=httpd state=absent"
+===========================================================================================
+
+Configuring Ansible with user:-
+
+1.Launch 2 EC2 Instance (AMI Linux)
+2.Add user to Ansible CM
+ sudo -i
+ useradd ansible
+ visudo
+ 	root ALL=(ALL) ALL
+	ansible ALL=(ALL) NOPASSWORD ALL
+3.Connect to Remote Machine
+  sudo -i
+ useradd ansible
+ visudo
+ 	root ALL=(ALL) ALL
+	ansible ALL=(ALL) NOPASSWORD ALL
+4.On Ansible CM
+	su ansible
+	pwd
+	whoami
+5.ssh-keygen
+  cd .ssh
+  ls
+  cat id_rsa.pub
+6.Go to Remote Machine
+  su ansible
+  cd
+  pwd
+  mkdir .ssh
+  ls -la
+  chmod 764 .ssh/
+  ls -la
+  cd .ssh
+  touch authorized_keys
+  ls -la
+  vi authorized_keys
+	-------
+	-------
+	paste (id_rsa.pub from Ansible CM )
+  chmod 400 authorized_keys
+  ls -la
+  cd ..
+  chmod 700 .ssh
+ 7.Go to AnsibleCM
+   ssh ansible@ansibleRM-private ip
+
+ 8.Install Ansible on CM
+
+  wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm 
+  sudo rpm -ivh epel-release-latest-7.noarch.rpm
+  sudo yum install ansible -y 
+  ansible --version 
+
+ 9.cd /etc/ansible
+   vi hosts
+	[webservers]
+	ansibleRM ipaddress 192.168.1.50
+ 10.
+	ansible host/group -m module -a arguments -u username --become
+	ansible webservers -m ping
+	ansible webservers  --list-host
+	ansible webservers -m setup
+	ansible webservers -m command -a 'date'
+	ansible webservers -m command -a 'ls -l'
+	ansible webservers -m command -a 'uptime'
+	ansible webservers -m shell -a 'ls -l > temp.txt'
+
+How to create User on RM using Ansible
+ (https://docs.ansible.com/ansible/latest/collections/ansible/builtin/user_module.html)
+  
+   ansible-doc  –l 
+   ansible-doc copy
+   ansible webservers -m user -a 'name=user1 password=user1' --become
+   ansible webservers -m command -a '/etc/passwd' --become
+   ansible webservers -m user -a 'name=user1 state=absent' --become
+ansible webservers -m file -a 'dest=/home/ansible/sam.txt state=touch mode=600 owner=ansible group=ansible'
+
+ansible webservers -m file -a 'dest=/home/ansible/sample state=directory mode=600 owner=ansible group=ansible'
+
+ansible webservers -m copy -a "src=sample.txt dest=/home/ansible/sample.txt"
+
+
